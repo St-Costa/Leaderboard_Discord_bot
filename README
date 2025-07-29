@@ -1,0 +1,16 @@
+# What is this
+A bot that sends a leaderboard of members in a Discord server, displaying their avatars in a collage format for each role.
+    
+# Why
+For Luca Nesler Lab NSL
+
+# How to make it work
+
+## Testing
+1. Run virtual environment
+source venv/bin/activate
+
+2. Run it
+python bot_immediate.py
+
+## Pushing it to fly.io
