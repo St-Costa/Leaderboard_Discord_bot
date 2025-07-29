@@ -14,3 +14,15 @@ source venv/bin/activate
 python bot_immediate.py
 
 ## Pushing it to fly.io
+1. Launch
+fly launch --no-deploy
+
+2. Set discord token as secret
+fly secrets set DISCORD_TOKEN=
+3. Deploy
+fly deploy
+
+IMPORTANT: find the image name in the log
+
+4. Scheduled running
+fly machine run registry.fly.io/leaderboard-discord-bot:deployment-01K1APFNYNB28NQ0SB4N6C1AJC --schedule=weekly
