@@ -15,8 +15,8 @@ intents = discord.Intents.default()
 intents.members = True
 intents.message_content = True   
 
-#CHANNEL_ID = 1383125540126326814 # "stato-del-laboratorio"
-CHANNEL_ID = 1396023104366706719 # testing_stefano
+CHANNEL_ID = 1383125540126326814 # "stato-del-laboratorio"
+#CHANNEL_ID = 1396023104366706719 # testing_stefano
 
 
 bot = commands.Bot(command_prefix="!", intents=intents)
