@@ -15,7 +15,9 @@ intents = discord.Intents.default()
 intents.members = True
 intents.message_content = True   
 
-CHANNEL_ID = 1396023104366706719 
+#CHANNEL_ID = 1383125540126326814 # "stato-del-laboratorio"
+CHANNEL_ID = 1396023104366706719 # testing_stefano
+
 
 bot = commands.Bot(command_prefix="!", intents=intents)
 
@@ -82,7 +84,8 @@ async def on_ready():
     if not channel:
         print(f"Canale non trovato: {CHANNEL_ID}")
     else:
-        await send_leaderboard(channel, guild)
+        await channel.purge()                   # Cancella messaggi del canale
+        await send_leaderboard(channel, guild)  # Stampa leaderboard
     await bot.close()
 
 bot.run(TOKEN)
