@@ -25,4 +25,4 @@ fly deploy
 IMPORTANT: find the image name in the log
 
 4. Scheduled running
-fly machine run registry.fly.io/leaderboard-discord-bot:deployment-01K1APFNYNB28NQ0SB4N6C1AJC --schedule=weekly
+fly machine run registry.fly.io/leaderboard-discord-bot:deployment-XXXXXXXXXXXXXXXX --schedule=weekly
