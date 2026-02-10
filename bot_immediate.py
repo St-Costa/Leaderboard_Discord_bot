@@ -78,14 +78,16 @@ async def send_leaderboard(channel, guild):
 
 @bot.event
 async def on_ready():
-    print(f"Bot online come {bot.user}")
-    guild = bot.guilds[0]
-    channel = bot.get_channel(CHANNEL_ID)
-    if not channel:
-        print(f"Canale non trovato: {CHANNEL_ID}")
-    else:
-        await channel.purge()                   # Cancella messaggi del canale
-        await send_leaderboard(channel, guild)  # Stampa leaderboard
-    await bot.close()
+    try:
+        print(f"Bot online come {bot.user}")
+        guild = bot.guilds[0]
+        channel = bot.get_channel(CHANNEL_ID)
+        if not channel:
+            print(f"Canale non trovato: {CHANNEL_ID}")
+        else:
+            await channel.purge()                   # Cancella messaggi del canale
+            await send_leaderboard(channel, guild)  # Stampa leaderboard
+    finally:
+        await bot.close()
 
 bot.run(TOKEN)
