@@ -17,7 +17,7 @@ primary_region = 'fra'
   processes = ['app']
 
 [deploy]
-  schedule = "0 13 * * 3"
+  schedule = "weekly"
 
 [[vm]]
   size = 'shared-cpu-1x'
