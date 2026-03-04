@@ -21,6 +21,34 @@ CHANNEL_ID = 1383125540126326814 # "stato-del-laboratorio"
 
 bot = commands.Bot(command_prefix="!", intents=intents)
 
+async def send_role_embed(channel, members, title, color):
+    avatars = []
+    async with aiohttp.ClientSession() as session:
+        for m in members:
+            url = m.avatar.url if m.avatar else m.default_avatar.url
+            async with session.get(url) as resp:
+                if resp.status == 200:
+                    data = await resp.read()
+                    avatar_img = Image.open(io.BytesIO(data)).resize((64, 64))
+                    avatars.append(avatar_img)
+
+    cols = min(8, len(avatars))
+    rows = (len(avatars) + cols - 1) // cols
+    collage = Image.new('RGBA', (cols * 64, rows * 64), (255, 255, 255, 0))
+    for idx, avatar in enumerate(avatars):
+        x = (idx % cols) * 64
+        y = (idx // cols) * 64
+        collage.paste(avatar, (x, y))
+
+    with io.BytesIO() as image_binary:
+        collage.save(image_binary, 'PNG')
+        image_binary.seek(0)
+        file = discord.File(fp=image_binary, filename="collage.png")
+        member_list = ", ".join([m.mention for m in members])
+        embed = discord.Embed(title=title, description=member_list, color=color)
+        embed.set_image(url="attachment://collage.png")
+        await channel.send(embed=embed, file=file)
+
 async def send_leaderboard(channel, guild):
     # Banner leaderboard
     embed = discord.Embed()
@@ -29,52 +57,22 @@ async def send_leaderboard(channel, guild):
         embed.set_image(url="attachment://leaderboard_banner.png")
         await channel.send(embed=embed, file=file)
 
-    # Exclude @everyone, "L'aggiustatutto", and bot roles
+    # Exclude @everyone, "L'aggiustatutto", and "Ex membro" from main leaderboard
     roles = [
         role for role in guild.roles
         if role != guild.default_role
         and role.members
         and role.name != "L'aggiustatutto"
+        and role.name != "Ex membro"
     ]
     roles = sorted(roles, key=lambda r: r.position, reverse=False)
 
-    # Per ogni ruolo, crea un collage di avatar
     for role in roles:
         members = [m for m in role.members if not m.bot]
         if not members:
             continue
+        await send_role_embed(channel, members, role.name, role.color)
 
-        avatars = []
-        async with aiohttp.ClientSession() as session:
-            for m in members:
-                url = m.avatar.url if m.avatar else m.default_avatar.url
-                async with session.get(url) as resp:
-                    if resp.status == 200:
-                        data = await resp.read()
-                        avatar_img = Image.open(io.BytesIO(data)).resize((64, 64))
-                        avatars.append(avatar_img)
-
-        cols = min(8, len(avatars))
-        rows = (len(avatars) + cols - 1) // cols
-        collage = Image.new('RGBA', (cols * 64, rows * 64), (255, 255, 255, 0))
-        for idx, avatar in enumerate(avatars):
-            x = (idx % cols) * 64
-            y = (idx // cols) * 64
-            collage.paste(avatar, (x, y))
-
-        with io.BytesIO() as image_binary:
-            collage.save(image_binary, 'PNG')
-            image_binary.seek(0)
-            file = discord.File(fp=image_binary, filename="collage.png")
-
-            member_list = ", ".join([m.mention for m in members])
-            embed = discord.Embed(
-                title=role.name,
-                description=member_list,
-                color=role.color
-            )
-            embed.set_image(url="attachment://collage.png")
-            await channel.send(embed=embed, file=file)
 
 @bot.event
 async def on_ready():
