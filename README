@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="logo.svg" width="140" alt="Leaderboard Discord Bot logo">
+</p>
+
 # What is this
 A bot that sends a leaderboard of members in a Discord server, displaying their avatars in a collage format for each role.
     
